@@ -1,0 +1,977 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>HipnoTrader — Sala Viva Pré-Mercado</title>
+<meta name="description" content="Prepare sua mente antes do pregão. Sala Viva HipnoTrader: hipnose e PNL ao vivo, de segunda a sexta, das 07h45 às 08h45.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet">
+
+<style>
+/* ── RESET & BASE ─────────────────────────────────────────────── */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --black:    #080A0F;
+  --dark:     #0D1117;
+  --dark2:    #111820;
+  --dark3:    #161D27;
+  --red:      #E94560;
+  --red-dim:  #7A1F30;
+  --green:    #00C853;
+  --green-dim:#004D20;
+  --gold:     #F5A623;
+  --white:    #F0F4F8;
+  --gray:     #8899AA;
+  --gray2:    #4A5568;
+  --border:   rgba(255,255,255,0.06);
+  --glow-r:   rgba(233,69,96,0.15);
+  --glow-g:   rgba(0,200,83,0.10);
+  --font-display: 'Syne', sans-serif;
+  --font-body:    'DM Sans', sans-serif;
+}
+
+html { scroll-behavior: smooth; }
+
+body {
+  background: var(--black);
+  color: var(--white);
+  font-family: var(--font-body);
+  font-size: 16px;
+  line-height: 1.7;
+  overflow-x: hidden;
+}
+
+/* ── NOISE TEXTURE OVERLAY ───────────────────────────────────── */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+  pointer-events: none;
+  z-index: 0;
+  opacity: 0.4;
+}
+
+/* ── CANDLESTICK BACKGROUND ──────────────────────────────────── */
+.candle-bg {
+  position: absolute;
+  bottom: 0; left: 0; right: 0;
+  height: 180px;
+  display: flex;
+  align-items: flex-end;
+  gap: 8px;
+  padding: 0 40px;
+  opacity: 0.12;
+  pointer-events: none;
+}
+.candle-bg .c {
+  display: flex; flex-direction: column; align-items: center;
+  gap: 2px; flex: 1;
+}
+.candle-bg .wick { width: 1px; background: currentColor; }
+.candle-bg .body { width: 100%; border-radius: 2px; }
+.candle-bg .up { color: var(--green); }
+.candle-bg .dn { color: var(--red); }
+
+/* ── NAVBAR ──────────────────────────────────────────────────── */
+nav {
+  position: fixed; top: 0; left: 0; right: 0;
+  z-index: 100;
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 18px 48px;
+  background: rgba(8,10,15,0.85);
+  backdrop-filter: blur(12px);
+  border-bottom: 1px solid var(--border);
+}
+.nav-logo {
+  font-family: var(--font-display);
+  font-weight: 800; font-size: 20px;
+  letter-spacing: -0.02em;
+}
+.nav-logo span:first-child { color: var(--white); }
+.nav-logo span:last-child  { color: var(--red); }
+
+.nav-cta {
+  background: var(--red);
+  color: #fff;
+  font-family: var(--font-display);
+  font-weight: 600; font-size: 13px;
+  padding: 10px 22px;
+  border-radius: 4px;
+  text-decoration: none;
+  letter-spacing: 0.02em;
+  transition: background 0.2s, transform 0.15s;
+}
+.nav-cta:hover { background: #c73550; transform: translateY(-1px); }
+
+/* ── HERO ────────────────────────────────────────────────────── */
+#hero {
+  position: relative;
+  min-height: 100vh;
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+  text-align: center;
+  padding: 120px 24px 80px;
+  overflow: hidden;
+}
+
+.hero-glow {
+  position: absolute;
+  width: 600px; height: 600px;
+  border-radius: 50%;
+  filter: blur(120px);
+  pointer-events: none;
+  z-index: 0;
+}
+.glow-red  { background: var(--glow-r); top: -100px; left: 50%; transform: translateX(-70%); }
+.glow-green{ background: var(--glow-g); bottom: -100px; right: -100px; }
+
+.hero-badge {
+  display: inline-flex; align-items: center; gap: 8px;
+  background: rgba(233,69,96,0.1);
+  border: 1px solid rgba(233,69,96,0.3);
+  border-radius: 100px;
+  padding: 6px 16px;
+  font-size: 12px; font-weight: 500;
+  color: var(--red);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  margin-bottom: 32px;
+  position: relative; z-index: 1;
+  animation: fadeDown 0.6s ease both;
+}
+.badge-dot {
+  width: 6px; height: 6px;
+  border-radius: 50%;
+  background: var(--green);
+  box-shadow: 0 0 8px var(--green);
+  animation: pulse 2s infinite;
+}
+@keyframes pulse {
+  0%,100% { opacity: 1; transform: scale(1); }
+  50%      { opacity: 0.5; transform: scale(1.4); }
+}
+
+.hero-title {
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: clamp(48px, 8vw, 96px);
+  line-height: 1.0;
+  letter-spacing: -0.03em;
+  position: relative; z-index: 1;
+  animation: fadeDown 0.6s 0.1s ease both;
+}
+.hero-title .hipno { color: var(--white); }
+.hero-title .trader { color: var(--red); }
+
+.hero-rule {
+  width: 80px; height: 3px;
+  background: var(--red);
+  margin: 28px auto;
+  position: relative; z-index: 1;
+  animation: fadeDown 0.6s 0.2s ease both;
+}
+
+.hero-sub {
+  font-size: clamp(18px, 2.5vw, 24px);
+  font-weight: 300;
+  color: var(--gray);
+  max-width: 600px;
+  margin: 0 auto 16px;
+  position: relative; z-index: 1;
+  animation: fadeDown 0.6s 0.3s ease both;
+}
+.hero-sub strong { color: var(--white); font-weight: 500; }
+
+.hero-time {
+  display: inline-flex; align-items: center; gap: 10px;
+  background: rgba(0,200,83,0.08);
+  border: 1px solid rgba(0,200,83,0.2);
+  border-radius: 6px;
+  padding: 12px 24px;
+  font-size: 15px; color: var(--green);
+  font-weight: 500;
+  margin: 24px 0 40px;
+  position: relative; z-index: 1;
+  animation: fadeDown 0.6s 0.4s ease both;
+}
+
+.hero-cta {
+  display: inline-block;
+  background: var(--red);
+  color: #fff;
+  font-family: var(--font-display);
+  font-size: 16px; font-weight: 700;
+  padding: 18px 48px;
+  border-radius: 4px;
+  text-decoration: none;
+  letter-spacing: 0.02em;
+  position: relative; z-index: 1;
+  transition: all 0.2s;
+  box-shadow: 0 0 40px rgba(233,69,96,0.3);
+  animation: fadeDown 0.6s 0.5s ease both;
+}
+.hero-cta:hover {
+  background: #c73550;
+  transform: translateY(-2px);
+  box-shadow: 0 0 60px rgba(233,69,96,0.4);
+}
+.hero-cta-note {
+  font-size: 12px; color: var(--gray2);
+  margin-top: 12px;
+  position: relative; z-index: 1;
+  animation: fadeDown 0.6s 0.6s ease both;
+}
+
+@keyframes fadeDown {
+  from { opacity: 0; transform: translateY(-16px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* ── TICKER ──────────────────────────────────────────────────── */
+.ticker-wrap {
+  background: var(--dark2);
+  border-top: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
+  overflow: hidden;
+  padding: 12px 0;
+}
+.ticker {
+  display: flex; gap: 60px;
+  animation: ticker 25s linear infinite;
+  white-space: nowrap;
+}
+.ticker-item {
+  display: flex; align-items: center; gap: 10px;
+  font-size: 13px; font-weight: 500;
+  color: var(--gray);
+  flex-shrink: 0;
+}
+.ticker-item .up   { color: var(--green); }
+.ticker-item .down { color: var(--red); }
+@keyframes ticker {
+  from { transform: translateX(0); }
+  to   { transform: translateX(-50%); }
+}
+
+/* ── SECTIONS ────────────────────────────────────────────────── */
+section { position: relative; z-index: 1; }
+
+.section-inner {
+  max-width: 1080px;
+  margin: 0 auto;
+  padding: 100px 24px;
+}
+
+.section-label {
+  font-size: 11px; font-weight: 600;
+  color: var(--red);
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  margin-bottom: 16px;
+}
+
+.section-title {
+  font-family: var(--font-display);
+  font-size: clamp(32px, 5vw, 52px);
+  font-weight: 800;
+  line-height: 1.1;
+  letter-spacing: -0.02em;
+  margin-bottom: 20px;
+}
+
+.section-sub {
+  font-size: 18px; font-weight: 300;
+  color: var(--gray);
+  max-width: 560px;
+  line-height: 1.7;
+}
+
+/* ── DOR SECTION ─────────────────────────────────────────────── */
+#dor { background: var(--dark); }
+
+.dor-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 1px;
+  background: var(--border);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  overflow: hidden;
+  margin-top: 56px;
+}
+
+.dor-card {
+  background: var(--dark2);
+  padding: 36px 32px;
+  transition: background 0.2s;
+}
+.dor-card:hover { background: var(--dark3); }
+
+.dor-icon {
+  font-size: 28px;
+  margin-bottom: 16px;
+  display: block;
+}
+.dor-card h3 {
+  font-family: var(--font-display);
+  font-size: 16px; font-weight: 700;
+  color: var(--white);
+  margin-bottom: 10px;
+}
+.dor-card p {
+  font-size: 14px; color: var(--gray);
+  line-height: 1.6;
+}
+
+/* ── SOLUÇÃO SECTION ─────────────────────────────────────────── */
+#solucao { background: var(--black); }
+
+.solucao-layout {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 80px;
+  align-items: center;
+  margin-top: 64px;
+}
+@media (max-width: 768px) { .solucao-layout { grid-template-columns: 1fr; gap: 40px; } }
+
+.solucao-card {
+  background: var(--dark2);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 40px 36px;
+  position: relative;
+  overflow: hidden;
+}
+.solucao-card::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 3px;
+  background: linear-gradient(90deg, var(--red), var(--green));
+}
+
+.time-block {
+  display: flex; flex-direction: column; gap: 20px;
+}
+.time-row {
+  display: flex; align-items: center; gap: 16px;
+  padding: 16px 20px;
+  background: var(--dark3);
+  border-radius: 6px;
+  border-left: 3px solid var(--green);
+}
+.time-row .time {
+  font-family: var(--font-display);
+  font-size: 22px; font-weight: 700;
+  color: var(--green);
+  min-width: 80px;
+}
+.time-row .desc {
+  font-size: 14px; color: var(--gray);
+}
+.time-row .desc strong { color: var(--white); display: block; font-size: 15px; }
+
+.includes-list { display: flex; flex-direction: column; gap: 14px; margin-top: 8px; }
+.inc-item {
+  display: flex; align-items: flex-start; gap: 12px;
+  font-size: 15px; color: var(--gray);
+}
+.inc-dot {
+  width: 20px; height: 20px; border-radius: 50%;
+  background: rgba(0,200,83,0.1);
+  border: 1px solid rgba(0,200,83,0.3);
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0; margin-top: 2px;
+  font-size: 11px; color: var(--green);
+}
+
+/* ── STATS ───────────────────────────────────────────────────── */
+#stats {
+  background: var(--dark);
+  border-top: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
+}
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1px;
+  background: var(--border);
+}
+@media (max-width: 768px) { .stats-grid { grid-template-columns: repeat(2,1fr); } }
+
+.stat-item {
+  background: var(--dark2);
+  padding: 48px 32px;
+  text-align: center;
+}
+.stat-val {
+  font-family: var(--font-display);
+  font-size: 48px; font-weight: 800;
+  letter-spacing: -0.03em;
+  line-height: 1;
+  margin-bottom: 8px;
+}
+.stat-val.red   { color: var(--red); }
+.stat-val.green { color: var(--green); }
+.stat-val.gold  { color: var(--gold); }
+.stat-val.white { color: var(--white); }
+.stat-label { font-size: 13px; color: var(--gray); line-height: 1.4; }
+
+/* ── DEPOIMENTOS ─────────────────────────────────────────────── */
+#depoimentos { background: var(--black); }
+
+.dep-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 24px;
+  margin-top: 56px;
+}
+.dep-card {
+  background: var(--dark2);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 32px 28px;
+  position: relative;
+}
+.dep-card::before {
+  content: '"';
+  position: absolute; top: 20px; right: 28px;
+  font-family: var(--font-display);
+  font-size: 80px; line-height: 1;
+  color: var(--red);
+  opacity: 0.15;
+}
+.dep-stars { color: var(--gold); font-size: 14px; margin-bottom: 12px; }
+.dep-title {
+  font-family: var(--font-display);
+  font-size: 16px; font-weight: 700;
+  color: var(--white);
+  margin-bottom: 12px;
+}
+.dep-text { font-size: 14px; color: var(--gray); line-height: 1.7; font-style: italic; margin-bottom: 20px; }
+.dep-author {
+  font-size: 12px; color: var(--gray2);
+  border-top: 1px solid var(--border);
+  padding-top: 16px;
+}
+.dep-author strong { color: var(--gray); display: block; }
+
+/* ── SOBRE ───────────────────────────────────────────────────── */
+#sobre { background: var(--dark); }
+
+.sobre-layout {
+  display: grid;
+  grid-template-columns: 280px 1fr;
+  gap: 64px;
+  align-items: start;
+}
+@media (max-width: 768px) { .sobre-layout { grid-template-columns: 1fr; gap: 40px; } }
+
+.sobre-foto {
+  width: 100%;
+  aspect-ratio: 3/4;
+  border-radius: 8px;
+  object-fit: cover;
+  background: var(--dark3);
+  border: 1px solid var(--border);
+  display: flex; align-items: center; justify-content: center;
+  flex-direction: column;
+  gap: 12px;
+  color: var(--gray2);
+  font-size: 13px;
+  text-align: center;
+}
+.sobre-foto-placeholder {
+  width: 100%;
+  aspect-ratio: 3/4;
+  border-radius: 8px;
+  background: var(--dark3);
+  border: 2px dashed var(--gray2);
+  display: flex; align-items: center; justify-content: center;
+  flex-direction: column;
+  gap: 10px;
+  color: var(--gray2);
+  font-size: 13px;
+  text-align: center;
+}
+.placeholder-icon { font-size: 40px; opacity: 0.4; }
+
+.sobre-content .section-title { margin-bottom: 12px; }
+.sobre-content p { color: var(--gray); font-size: 16px; margin-bottom: 16px; }
+.sobre-content p strong { color: var(--white); }
+
+.credenciais {
+  display: flex; flex-direction: column; gap: 10px;
+  margin-top: 28px;
+}
+.cred-item {
+  display: flex; align-items: center; gap: 12px;
+  font-size: 14px; color: var(--gray);
+}
+.cred-dot {
+  width: 6px; height: 6px; border-radius: 50%;
+  background: var(--red); flex-shrink: 0;
+}
+
+/* ── CTA SECTION ─────────────────────────────────────────────── */
+#inscricao {
+  background: var(--black);
+  border-top: 1px solid var(--border);
+}
+
+.cta-box {
+  background: var(--dark2);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 64px 56px;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+  max-width: 760px;
+  margin: 0 auto;
+}
+.cta-box::before {
+  content: '';
+  position: absolute; top: 0; left: 0; right: 0;
+  height: 4px;
+  background: linear-gradient(90deg, var(--red), var(--green));
+}
+.cta-box .section-title { margin-bottom: 16px; }
+.cta-box .section-sub {
+  margin: 0 auto 40px;
+  font-size: 16px;
+}
+
+/* Google Forms embed */
+.forms-wrapper {
+  background: var(--dark3);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  overflow: hidden;
+  margin-bottom: 24px;
+}
+.forms-placeholder {
+  padding: 48px 32px;
+  text-align: center;
+  color: var(--gray2);
+}
+.forms-placeholder .forms-icon { font-size: 36px; margin-bottom: 12px; }
+.forms-placeholder p { font-size: 14px; line-height: 1.6; }
+.forms-placeholder code {
+  display: block;
+  margin-top: 12px;
+  background: var(--dark);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  padding: 10px 16px;
+  font-size: 12px;
+  color: var(--green);
+  word-break: break-all;
+  text-align: left;
+}
+
+.cta-contacts {
+  display: flex; align-items: center; justify-content: center;
+  gap: 24px; flex-wrap: wrap;
+  margin-top: 28px;
+}
+.contact-link {
+  display: flex; align-items: center; gap: 8px;
+  font-size: 14px; color: var(--gray);
+  text-decoration: none;
+  transition: color 0.2s;
+}
+.contact-link:hover { color: var(--white); }
+.contact-link .icon { font-size: 18px; }
+
+.urgency-bar {
+  display: flex; align-items: center; justify-content: center; gap: 10px;
+  background: rgba(233,69,96,0.08);
+  border: 1px solid rgba(233,69,96,0.2);
+  border-radius: 6px;
+  padding: 14px 24px;
+  font-size: 14px; color: var(--red);
+  margin-top: 28px;
+}
+
+/* ── FOOTER ──────────────────────────────────────────────────── */
+footer {
+  background: var(--dark2);
+  border-top: 1px solid var(--border);
+  padding: 40px 48px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 16px;
+}
+.footer-logo {
+  font-family: var(--font-display);
+  font-weight: 800; font-size: 18px;
+}
+.footer-logo span:first-child { color: var(--white); }
+.footer-logo span:last-child  { color: var(--red); }
+footer p { font-size: 12px; color: var(--gray2); }
+
+/* ── SCROLL REVEAL ───────────────────────────────────────────── */
+.reveal {
+  opacity: 0;
+  transform: translateY(24px);
+  transition: opacity 0.7s ease, transform 0.7s ease;
+}
+.reveal.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* ── RESPONSIVE ──────────────────────────────────────────────── */
+@media (max-width: 768px) {
+  nav { padding: 16px 20px; }
+  .section-inner { padding: 72px 20px; }
+  .stats-grid { padding: 0; }
+  .cta-box { padding: 40px 24px; }
+  footer { padding: 32px 20px; flex-direction: column; text-align: center; }
+}
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-logo">
+    <span>Hipno</span><span>Trader</span>
+  </div>
+  <a href="#inscricao" class="nav-cta">Quero minha vaga →</a>
+</nav>
+
+<!-- HERO -->
+<section id="hero">
+  <div class="hero-glow glow-red"></div>
+  <div class="hero-glow glow-green"></div>
+
+  <div class="hero-badge">
+    <span class="badge-dot"></span>
+    Vagas limitadas — Lista de espera aberta
+  </div>
+
+  <h1 class="hero-title">
+    <span class="hipno">HIPNO</span><br>
+    <span class="trader">TRADER</span>
+  </h1>
+
+  <div class="hero-rule"></div>
+
+  <p class="hero-sub">
+    Prepare sua mente <strong>antes do pregão</strong>.<br>
+    Não com mais análise técnica — com reprogramação mental.
+  </p>
+
+  <div class="hero-time">
+    📅&nbsp; Segunda a sexta &nbsp;|&nbsp; 🕖&nbsp; 07h45 – 08h45 &nbsp;|&nbsp; 📡&nbsp; Ao vivo
+  </div>
+
+  <a href="#inscricao" class="hero-cta">Garantir minha vaga na lista de espera</a>
+  <p class="hero-cta-note">Gratuito para se inscrever · Sala inicia quando atingirmos o número mínimo de participantes</p>
+
+  <!-- Candlesticks decorativos -->
+  <div class="candle-bg">
+    <div class="c up"><div class="wick" style="height:20px;background:var(--green)"></div><div class="body" style="height:40px;background:var(--green)"></div><div class="wick" style="height:10px;background:var(--green)"></div></div>
+    <div class="c dn"><div class="wick" style="height:14px;background:var(--red)"></div><div class="body" style="height:55px;background:var(--red)"></div><div class="wick" style="height:8px;background:var(--red)"></div></div>
+    <div class="c dn"><div class="wick" style="height:10px;background:var(--red)"></div><div class="body" style="height:35px;background:var(--red)"></div><div class="wick" style="height:16px;background:var(--red)"></div></div>
+    <div class="c up"><div class="wick" style="height:18px;background:var(--green)"></div><div class="body" style="height:48px;background:var(--green)"></div><div class="wick" style="height:6px;background:var(--green)"></div></div>
+    <div class="c dn"><div class="wick" style="height:12px;background:var(--red)"></div><div class="body" style="height:70px;background:var(--red)"></div><div class="wick" style="height:14px;background:var(--red)"></div></div>
+    <div class="c up"><div class="wick" style="height:22px;background:var(--green)"></div><div class="body" style="height:60px;background:var(--green)"></div><div class="wick" style="height:8px;background:var(--green)"></div></div>
+    <div class="c up"><div class="wick" style="height:8px;background:var(--green)"></div><div class="body" style="height:80px;background:var(--green)"></div><div class="wick" style="height:12px;background:var(--green)"></div></div>
+    <div class="c dn"><div class="wick" style="height:16px;background:var(--red)"></div><div class="body" style="height:42px;background:var(--red)"></div><div class="wick" style="height:10px;background:var(--red)"></div></div>
+    <div class="c up"><div class="wick" style="height:10px;background:var(--green)"></div><div class="body" style="height:65px;background:var(--green)"></div><div class="wick" style="height:18px;background:var(--green)"></div></div>
+    <div class="c dn"><div class="wick" style="height:20px;background:var(--red)"></div><div class="body" style="height:30px;background:var(--red)"></div><div class="wick" style="height:12px;background:var(--red)"></div></div>
+    <div class="c up"><div class="wick" style="height:14px;background:var(--green)"></div><div class="body" style="height:90px;background:var(--green)"></div><div class="wick" style="height:6px;background:var(--green)"></div></div>
+    <div class="c up"><div class="wick" style="height:18px;background:var(--green)"></div><div class="body" style="height:75px;background:var(--green)"></div><div class="wick" style="height:10px;background:var(--green)"></div></div>
+  </div>
+</section>
+
+<!-- TICKER -->
+<div class="ticker-wrap">
+  <div class="ticker">
+    <div class="ticker-item">WINFUT <span class="up">▲ 0,42%</span></div>
+    <div class="ticker-item">WDOFUT <span class="down">▼ 0,18%</span></div>
+    <div class="ticker-item">IBOV <span class="up">▲ 1,03%</span></div>
+    <div class="ticker-item">S&P500 <span class="up">▲ 0,67%</span></div>
+    <div class="ticker-item">NASDAQ <span class="up">▲ 0,91%</span></div>
+    <div class="ticker-item">PETR4 <span class="down">▼ 0,34%</span></div>
+    <div class="ticker-item">VALE3 <span class="up">▲ 0,55%</span></div>
+    <div class="ticker-item">DXY <span class="down">▼ 0,12%</span></div>
+    <!-- Repetição para loop contínuo -->
+    <div class="ticker-item">WINFUT <span class="up">▲ 0,42%</span></div>
+    <div class="ticker-item">WDOFUT <span class="down">▼ 0,18%</span></div>
+    <div class="ticker-item">IBOV <span class="up">▲ 1,03%</span></div>
+    <div class="ticker-item">S&P500 <span class="up">▲ 0,67%</span></div>
+    <div class="ticker-item">NASDAQ <span class="up">▲ 0,91%</span></div>
+    <div class="ticker-item">PETR4 <span class="down">▼ 0,34%</span></div>
+    <div class="ticker-item">VALE3 <span class="up">▲ 0,55%</span></div>
+    <div class="ticker-item">DXY <span class="down">▼ 0,12%</span></div>
+  </div>
+</div>
+
+<!-- DOR -->
+<section id="dor">
+  <div class="section-inner">
+    <p class="section-label reveal">Você se reconhece aqui?</p>
+    <h2 class="section-title reveal">O problema não é a sua estratégia</h2>
+    <p class="section-sub reveal">Mais de 80% das perdas recorrentes não acontecem por falha técnica. Acontecem por falha emocional na execução.</p>
+
+    <div class="dor-grid">
+      <div class="dor-card reveal">
+        <span class="dor-icon">🔴</span>
+        <h3>Você trava na entrada</h3>
+        <p>Viu o setup se formar com clareza. Não conseguiu apertar o botão. A operação foi sem você — e você ficou olhando.</p>
+      </div>
+      <div class="dor-card reveal">
+        <span class="dor-icon">📉</span>
+        <h3>Revenge trade</h3>
+        <p>Levou um stop e abriu outro trade imediatamente para recuperar. Sem setup. Sem plano. Só emoção — e a conta pagou o preço.</p>
+      </div>
+      <div class="dor-card reveal">
+        <span class="dor-icon">⏱️</span>
+        <h3>Saída prematura</h3>
+        <p>O trade foi na direção certa e você saiu antes do alvo com medo de reverter. Depois assistiu o preço chegar exatamente onde você planejou.</p>
+      </div>
+      <div class="dor-card reveal">
+        <span class="dor-icon">🎭</span>
+        <h3>Demo x Real</h3>
+        <p>Na conta demo tudo funciona. Na conta real, o mesmo método produz resultados completamente diferentes. O problema nunca foi o método.</p>
+      </div>
+      <div class="dor-card reveal">
+        <span class="dor-icon">🧠</span>
+        <h3>Você sabe o que fazer</h3>
+        <p>Conhece cada regra do seu método. E as quebra mesmo assim, no calor do momento. Como se outra pessoa assumisse o controle.</p>
+      </div>
+      <div class="dor-card reveal">
+        <span class="dor-icon">🔁</span>
+        <h3>O ciclo se repete</h3>
+        <p>Você promete que amanhã será diferente. E às vezes é. Mas o padrão volta. Porque o problema está num nível mais profundo do que a promessa consciente alcança.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- STATS -->
+<section id="stats">
+  <div class="section-inner" style="padding: 0;">
+    <div class="stats-grid">
+      <div class="stat-item reveal">
+        <div class="stat-val red">80%</div>
+        <div class="stat-label">das perdas recorrentes são de origem emocional, não técnica</div>
+      </div>
+      <div class="stat-item reveal">
+        <div class="stat-val green">70%</div>
+        <div class="stat-label">do resultado consistente depende de psicologia de execução</div>
+      </div>
+      <div class="stat-item reveal">
+        <div class="stat-val gold">07h45</div>
+        <div class="stat-label">o melhor momento para preparar a mente é antes do pregão abrir</div>
+      </div>
+      <div class="stat-item reveal">
+        <div class="stat-val white">7</div>
+        <div class="stat-label">técnicas de reprogramação mental aplicadas em cada sessão ao vivo</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SOLUÇÃO -->
+<section id="solucao">
+  <div class="section-inner">
+    <p class="section-label reveal">A solução</p>
+    <h2 class="section-title reveal">Sala Viva HipnoTrader</h2>
+    <p class="section-sub reveal">Preparação mental ao vivo, toda manhã, antes do mercado abrir. Não é análise. Não é call. É reprogramação da mente que executa.</p>
+
+    <div class="solucao-layout">
+      <div class="solucao-card reveal">
+        <h3 style="font-family:var(--font-display);font-size:18px;font-weight:700;margin-bottom:24px;color:var(--white)">Como funciona cada sessão</h3>
+        <div class="time-block">
+          <div class="time-row">
+            <span class="time">07h45</span>
+            <div class="desc"><strong>Entrada na sala</strong>Acolhimento e alinhamento do estado inicial do grupo</div>
+          </div>
+          <div class="time-row">
+            <span class="time">07h50</span>
+            <div class="desc"><strong>Reset Fisiológico</strong>Protocolo de respiração para regular o sistema nervoso</div>
+          </div>
+          <div class="time-row">
+            <span class="time">08h00</span>
+            <div class="desc"><strong>Hipnose + PNL</strong>Técnica guiada para o contexto do dia — presença, identidade, foco</div>
+          </div>
+          <div class="time-row">
+            <span class="time">08h30</span>
+            <div class="desc"><strong>Visualização do pregão</strong>Você visualiza sua execução antes de ela acontecer</div>
+          </div>
+          <div class="time-row">
+            <span class="time">08h45</span>
+            <div class="desc"><strong>Encerramento</strong>Você entra no mercado no estado certo para operar</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="reveal">
+        <h3 style="font-family:var(--font-display);font-size:18px;font-weight:700;margin-bottom:24px;color:var(--white)">O que está incluído</h3>
+        <div class="includes-list">
+          <div class="inc-item"><div class="inc-dot">✓</div><span>Sessões ao vivo de segunda a sexta — 07h45 às 08h45</span></div>
+          <div class="inc-item"><div class="inc-dot">✓</div><span>Protocolos guiados de hipnose clínica aplicada ao trading</span></div>
+          <div class="inc-item"><div class="inc-dot">✓</div><span>Técnicas de PNL adaptadas ao contexto do dia</span></div>
+          <div class="inc-item"><div class="inc-dot">✓</div><span>Visualização guiada de execução antes do pregão</span></div>
+          <div class="inc-item"><div class="inc-dot">✓</div><span>Acesso ao grupo exclusivo de traders da Sala Viva</span></div>
+          <div class="inc-item"><div class="inc-dot">✓</div><span>Ebook HipnoTrader completo — incluído para membros</span></div>
+          <div class="inc-item"><div class="inc-dot">✓</div><span>Sessões independentes — cada dia é completo em si mesmo, sem necessidade de sequência</span></div>
+        </div>
+
+        <div style="margin-top:36px;padding:24px;background:rgba(233,69,96,0.06);border:1px solid rgba(233,69,96,0.15);border-radius:8px;">
+          <p style="font-size:13px;color:var(--gray);line-height:1.6;">
+            <strong style="color:var(--white);display:block;margin-bottom:6px;">📡 Plataforma</strong>
+            Google Meet ou Zoom — link enviado após confirmação da vaga. Funciona em qualquer dispositivo.
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- DEPOIMENTOS -->
+<section id="depoimentos" style="background:var(--dark);">
+  <div class="section-inner">
+    <p class="section-label reveal">Resultados reais</p>
+    <h2 class="section-title reveal">O que traders dizem</h2>
+    <p class="section-sub reveal">Relatos compostos com base em experiências reais. Dados alterados para preservar privacidade.</p>
+
+    <div class="dep-grid">
+      <div class="dep-card reveal">
+        <div class="dep-stars">★★★★★</div>
+        <div class="dep-title">Finalmente entendi o problema</div>
+        <div class="dep-text">"Tentei tudo sem resultado porque ninguém explicava o PORQUÊ. Quando entendi que ansiedade bloqueia ereção fisiologicamente — que ansiedade me bloqueia fisiologicamente — algo clicou. Agora consigo estar presente sem monitorar meu próprio corpo durante o trade."</div>
+        <div class="dep-author"><strong>Rodrigo M., 34 anos</strong>Trader de minicontratos — Belo Horizonte</div>
+      </div>
+      <div class="dep-card reveal">
+        <div class="dep-stars">★★★★★</div>
+        <div class="dep-title">Recuperei minha confiança</div>
+        <div class="dep-text">"Perdi confiança após alguns episódios ruins. Quando você muda como se vê, tudo muda. Agora tenho consciência do que acontece na minha mente durante o pregão — e sei exatamente o que fazer. Minha consistência melhorou de forma que não consigo atribuir a nenhuma outra mudança."</div>
+        <div class="dep-author"><strong>Patricia S., 29 anos</strong>Trader de opções — São Paulo</div>
+      </div>
+      <div class="dep-card reveal">
+        <div class="dep-stars">★★★★★</div>
+        <div class="dep-title">O passado ainda estava me operando</div>
+        <div class="dep-text">"Carreguei um drawdown de dois anos atrás sem saber. Toda vez que um trade ia muito a meu favor, eu fechava antes do alvo. Quando trabalhei a memória emocional daquele drawdown, meu comportamento mudou mais do que qualquer ajuste técnico que fiz nos dois anos anteriores."</div>
+        <div class="dep-author"><strong>Fernando K., 41 anos</strong>Trader de futuros — Porto Alegre</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SOBRE -->
+<section id="sobre">
+  <div class="section-inner">
+    <div class="sobre-layout">
+      <div class="sobre-foto-placeholder reveal">
+        <div class="placeholder-icon">📸</div>
+        <p style="font-size:12px;line-height:1.5;padding:0 16px;">
+          Sua foto aqui<br>
+          <span style="color:var(--gray2);font-size:11px;">Substitua este bloco pela sua imagem no código HTML</span>
+        </p>
+      </div>
+      <!-- Para inserir sua foto: substitua o bloco acima por:
+           <img src="sua-foto.jpg" alt="Igor Cardoso" class="sobre-foto"> -->
+
+      <div class="sobre-content reveal">
+        <p class="section-label">Quem conduz</p>
+        <h2 class="section-title">Igor Cardoso</h2>
+        <p>Hipnoterapeuta clínico especializado em <strong>performance mental aplicada ao trading</strong>. Trabalha na interseção entre hipnose clínica, PNL e psicologia das decisões financeiras.</p>
+        <p>Sua abordagem parte de uma premissa simples: o trader que não treina a mente está jogando com apenas 5% do tabuleiro. As técnicas que ensina acessam os outros 95% — onde os padrões de sabotagem realmente moram.</p>
+        <p>A <strong>Sala Viva HipnoTrader</strong> nasceu da necessidade de tornar esse trabalho acessível, recorrente e aplicado diretamente ao contexto do pregão — toda manhã, antes do mercado abrir.</p>
+
+        <div class="credenciais">
+          <div class="cred-item"><div class="cred-dot"></div>Hipnoterapeuta Clínico</div>
+          <div class="cred-item"><div class="cred-dot"></div>Especialista em PNL aplicada à performance</div>
+          <div class="cred-item"><div class="cred-dot"></div>Autor do ebook HipnoTrader</div>
+          <div class="cred-item"><div class="cred-dot"></div>Instagram: @hipnoterapeutaigor</div>
+          <div class="cred-item"><div class="cred-dot"></div>WhatsApp: (71) 99163-4376</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA / INSCRIÇÃO -->
+<section id="inscricao">
+  <div class="section-inner">
+    <div class="cta-box reveal">
+      <p class="section-label">Lista de espera</p>
+      <h2 class="section-title">Garanta sua vaga</h2>
+      <p class="section-sub">
+        A Sala Viva é um espaço <strong style="color:var(--white)">contínuo e sem turmas</strong> — você entra quando a sala iniciar e segue no seu próprio ritmo. As sessões são independentes entre si, como um ritual diário de preparação. Inscreva-se na lista de espera e seja avisado pessoalmente pelo WhatsApp quando chegarmos ao número mínimo para o início.
+      </p>
+
+      <!-- GOOGLE FORMS EMBED -->
+      <div class="forms-wrapper">
+        <iframe src="https://docs.google.com/forms/d/e/1FAIpQLSez38l_aj11KkA5Dd-dhqUhitZYLMaSwRl18HIs2xYS-cQWmQ/viewform?embedded=true" 
+                width="100%" height="780" frameborder="0" 
+                marginheight="0" marginwidth="0" 
+                style="border:none;display:block;background:transparent;">
+          Carregando…
+        </iframe>
+      </div>
+
+      <div class="urgency-bar">
+        🟡 &nbsp; A sala inicia assim que atingirmos o número mínimo de participantes — sua inscrição garante prioridade no aviso
+      </div>
+
+      <div class="cta-contacts">
+        <a href="https://instagram.com/hipnoterapeutaigor" target="_blank" class="contact-link">
+          <span class="icon">📸</span> @hipnoterapeutaigor
+        </a>
+        <a href="https://wa.me/5571991634376" target="_blank" class="contact-link">
+          <span class="icon">📱</span> (71) 99163-4376
+        </a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-logo">
+    <span>Hipno</span><span>Trader</span>
+  </div>
+  <p>© 2025 Igor Cardoso — Todos os direitos reservados</p>
+  <p style="font-size:11px;color:var(--gray2);max-width:300px;text-align:right;">
+    Este site não constitui aconselhamento financeiro. O mercado envolve risco real de perda de capital.
+  </p>
+</footer>
+
+<script>
+// Scroll reveal
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(e => {
+    if (e.isIntersecting) {
+      e.target.classList.add('visible');
+      observer.unobserve(e.target);
+    }
+  });
+}, { threshold: 0.12 });
+
+document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+
+// Stagger delays para grids
+document.querySelectorAll('.dor-grid .dor-card, .dep-grid .dep-card').forEach((el, i) => {
+  el.style.transitionDelay = `${i * 0.08}s`;
+});
+document.querySelectorAll('.stats-grid .stat-item').forEach((el, i) => {
+  el.style.transitionDelay = `${i * 0.1}s`;
+});
+</script>
+
+</body>
+</html>
