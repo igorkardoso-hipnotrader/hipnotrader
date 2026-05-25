@@ -160,10 +160,12 @@ nav {
   font-family: var(--font-display);
   font-weight: 800;
   font-size: clamp(48px, 8vw, 96px);
-  line-height: 1.0;
+  line-height: 1.05;
   letter-spacing: -0.03em;
   position: relative; z-index: 1;
   animation: fadeDown 0.6s 0.1s ease both;
+  word-break: keep-all;
+  white-space: nowrap;
 }
 .hero-title .hipno { color: var(--white); }
 .hero-title .trader { color: var(--red); }
@@ -640,8 +642,13 @@ footer p { font-size: 12px; color: var(--gray2); }
 
   /* HERO */
   #hero { padding: 100px 20px 60px; }
-  .hero-title { font-size: clamp(40px, 14vw, 72px); }
-  .hero-title span[style] { font-size: clamp(16px, 5vw, 28px) !important; }
+  .hero-title {
+    font-size: clamp(36px, 12vw, 72px);
+    white-space: normal;
+    word-break: keep-all;
+    text-align: center;
+  }
+  .hero-title span[style] { font-size: clamp(14px, 4.5vw, 26px) !important; }
   .hero-time { font-size: 13px; padding: 10px 16px; flex-wrap: wrap; gap: 4px; text-align: center; justify-content: center; }
   .hero-cta { font-size: 14px; padding: 16px 28px; }
   .candle-bg { padding: 0 16px; gap: 4px; }
@@ -729,7 +736,7 @@ footer p { font-size: 12px; color: var(--gray2); }
     grid-template-columns: 1fr !important;
     gap: 32px !important;
   }
-  .hero-title { font-size: clamp(36px, 13vw, 60px); }
+  .hero-title { font-size: clamp(32px, 11vw, 56px); }
   .stats-grid { grid-template-columns: 1fr; }
   .stat-item { padding: 24px 20px; }
   nav { padding: 12px 14px; }
@@ -766,7 +773,7 @@ footer p { font-size: 12px; color: var(--gray2); }
   </div>
 
   <h1 class="hero-title">
-    <span class="hipno" style="font-size:clamp(22px,4vw,48px);font-weight:700;letter-spacing:0.02em;">SALA VIVA</span><br>
+    <span class="hipno" style="font-size:clamp(18px,4vw,48px);font-weight:700;letter-spacing:0.02em;display:block;">SALA VIVA</span>
     <span class="hipno">HIPNO</span><span class="trader">TRADER</span>
   </h1>
 
